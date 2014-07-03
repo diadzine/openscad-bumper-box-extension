@@ -10,13 +10,13 @@ $fn = 50;
 thickness = 3;
 clearance = 0.1;
 
-inner_width = 109.5;
-inner_height = 74.5;
+inner_width = 109;
+inner_height = 74;
 inner_depth = 10;
 inner_corner_radius = 7;
 inner_corner_offset = 10;
-outer_width = 110;
-outer_height = 75;
+outer_width = 111;
+outer_height = 76;
 outer_depth = 11;
 outer_corner_radius = 7;
 elevation = 40;
@@ -37,7 +37,7 @@ module RoundingEdge(radius, length) {
 module RoundingInnerEdge(radius, length) {	
 	difference() {
 		translate([0, 0, -clearance]) {
-			cube([2*radius, 2*radius, length]);
+			cube([10*radius, 10*radius, length]);
 		}
 		translate([radius, radius, -clearance]) {
 			rotate([0, 0, 180]) RoundingEdge(radius, length);
@@ -64,6 +64,7 @@ module RoundedOuterCube(width, height, depth, radius) {
 }
 
 module RoundedInnerCube(width, height, depth, radius, offset) {
+	echo("Offset=", offset);
 	difference() {
 		cube([width, height, depth]);
 		translate([width-offset, height-offset, 0]) {
@@ -87,7 +88,7 @@ module Draw() {
 			color("green") {
 				RoundedOuterCube(outer_width+2*thickness, outer_height+2*thickness, elevation-inner_depth, outer_corner_radius);
 				translate([(outer_width-inner_width+2*thickness)/2, (outer_height-inner_height+2*thickness)/2, elevation-inner_depth]) {
-					RoundedInnerCube(inner_width, inner_height, inner_depth, inner_corner_radius, inner_corner_radius, inner_corner_offset);
+					RoundedInnerCube(inner_width, inner_height, inner_depth, inner_corner_radius, inner_corner_offset);
 				}
 			}
 		}
@@ -97,7 +98,7 @@ module Draw() {
 					RoundedOuterCube(outer_width, outer_height, outer_depth+clearance, outer_corner_radius-thickness);
 				}
 				translate([(outer_width-inner_width+4*thickness)/2, (outer_height-inner_height+4*thickness)/2, outer_depth-clearance]) {
-					RoundedInnerCube(inner_width-2*thickness, inner_height-2*thickness, elevation-outer_depth+2*clearance, inner_corner_radius+thickness, inner_corner_radius);
+					RoundedInnerCube(inner_width-2*thickness, inner_height-2*thickness, elevation-outer_depth+2*clearance, inner_corner_radius+thickness, inner_corner_offset);
 				}
 			}
 		}
@@ -106,9 +107,3 @@ module Draw() {
 
 /****** RENDERS ****/
 Draw();
-//difference() {
-//	RoundedInnerCube(inner_width, inner_height, inner_depth, inner_corner_radius, 10);
-//	translate([thickness, thickness, -clearance ]){
-//		RoundedInnerCube(inner_width-2*thickness, inner_height-2*thickness, inner_depth+2*clearance, inner_corner_radius+thickness, 10);
-//	}
-//}
